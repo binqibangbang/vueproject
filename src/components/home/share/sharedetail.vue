@@ -1,8 +1,8 @@
 <template>
   <div class="mui-content">
-        <div class="title" v-for="(item,index) in imageinfo" :key="item.id">
-            <h4>{{item.title}}</h4>
-            <span>{{item.add_time}}</span> &nbsp;&nbsp;&nbsp;&nbsp; <span>点击次数{{item.click}}</span>
+        <div class="title">
+            <h4>{{imageinfo.title}}</h4>
+            <span>{{imageinfo.add_time}}</span> &nbsp;&nbsp;&nbsp;&nbsp; <span>点击次数{{imageinfo.click}}</span>
             <ul class="mui-table-view mui-grid-view mui-grid-9">
             <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3" v-for='(item,index) in imagearr' :key="index">
                 <a href="#">
@@ -12,24 +12,23 @@
         <!-- 注意 v-for的位置   -->
         </ul> 
         </div>
-
-        
- 
+       
         <p class="content">
-          这里是内容
+          {{imageinfo.content}}
         </p>
 
         <!-- 评论--> 
+       <comment :id='id'></comment>
     </div>
 </template>
 <script>
-
+import comment from "../../common/comments.vue";
 export default {
-  props: ["id"],
+  props: ['id'],
   data: function() {
     return {
-      imageinfo:{},
-      imagearr:[]
+      imageinfo: {},
+      imagearr: []
     };
   },
   created: function() {
@@ -37,34 +36,40 @@ export default {
     this.getthumimages();
   },
   methods: {
-    getimageInfo(){
-      var url='/api/getimageInfo/'+this.id
-       this.$http
+    // 获取图片
+    getimageInfo() {
+      var url = "/api/getimageInfo/" + this.id;
+      this.$http
         .get(url)
-        .then(response=>{
-            this.imageinfo=response.data.message;
-            console.log('s')
-            console.log( this.imageinfo)
+        .then(response => {
+          console.log("s");
+          // console.log( response)
+          this.imageinfo = response.data.message[0];
+          console.log(this.imageinfo);
         })
-        .catch(err=>{
-            console.error(err)
-        })
+        .catch(err => {
+          console.error(err);
+        });
     },
-    getthumimages(){
-        var url='/api/getthumimages/'+this.id
-        this.$http
+    getthumimages() {
+      var url = "/api/getthumimages/" + this.id;
+      this.$http
         .get(url)
-        .then(response=>{
-            this.imagearr=response.data.message;
-            // console.log( this.imagearr)
+        .then(response => {
+          this.imagearr = response.data.message;
+          // console.log( this.imagearr)
         })
-        .catch(err=>{
-            console.error(err)
-        })
+        .catch(err => {
+          console.error(err);
+        });
     }
+  },
+  components:{
+    comment
   }
 };
 </script>
+
 <style scoped>
 .mui-content {
   background-color: #fff;
@@ -83,7 +88,7 @@ export default {
 }
 /*9宫格样式*/
 
- .mui-grid-view.mui-grid-9 {
+.mui-grid-view.mui-grid-9 {
   background-color: #fff;
   border-left: 0px;
 }
@@ -101,5 +106,5 @@ export default {
 
 .mui-grid-view.mui-grid-9 .mui-table-view-cell > a:not(.mui-btn) {
   padding: 0;
-} 
+}
 </style>

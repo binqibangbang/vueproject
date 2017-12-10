@@ -17,7 +17,7 @@
 import comment from '../../common/comments.vue';
 import '../../../../static/css/style.css';
 export default {
-   props: ["id"],
+   props: ['id'],
   data: function() {   
     return {
       newdetail: [],
